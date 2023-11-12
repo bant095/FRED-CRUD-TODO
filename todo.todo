@@ -1,0 +1,6 @@
+- Index page for all todos
+- Preview page {dynamic route}
+- Utils
+
+DOM access - state //getting current value using state
+-document.querrySelector("form-message")
