@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { getLocalStorage, setLocalStorage } from './utils/local-storage';
@@ -10,7 +9,7 @@ import './App.css';
 const todo_ls_name = process.env.REACT_APP_TODO_LOCAL_STORAGE_NAME;
 
 function App() {
-  const [loadingTodos, setLoadingTodos] = useState;
+  const [loadingTodos, setLoadingTodos] = useState(true);
   const [todos, setTodos] = useState([]);
   const [todoInput, setTodoInput] = useState('');
   const [formError, setFormError] = useState({
@@ -123,7 +122,6 @@ function App() {
             No todos yet. They'll will appear here once you add them.
           </p>
         )}
-        <TodoLoader />
 
         <section className='mt-5'>
           {loadingTodos ? (
