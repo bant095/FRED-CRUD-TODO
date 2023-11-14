@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const TodoList = (props) => {
-  const { id, title, created_at, handleDelete } = props;
+  const { id, title, created_at, handleDelete, handleEditMode } = props;
   return (
     <div
       id='task'
@@ -9,7 +9,10 @@ export const TodoList = (props) => {
     >
       <a href={`/${id}`}>{title}</a>
       <div className='hidden group-hover:flex'>
-        <button onclick="handleEditMode('${todo.id}')">
+        <button
+          // onclick="handleEditMode('${todo.id}')"
+          onClick={() => handleEditMode(id)}
+        >
           <svg
             xmlns='http://www.w3.org/2000/svg'
             fill='none'

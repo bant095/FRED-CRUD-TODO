@@ -10,6 +10,7 @@ import './App.css';
 const todo_ls_name = process.env.REACT_APP_TODO_LOCAL_STORAGE_NAME;
 
 function App() {
+  const [isEditMode, setIsEditMode] = useState(false);
   const [loadingTodos, setLoadingTodos] = useState(true);
   const [todos, setTodos] = useState([]);
   const [todoInput, setTodoInput] = useState('');
@@ -17,6 +18,9 @@ function App() {
     isError: false,
     errorMesssage: null,
   }); // success, warning, danger
+
+  //having a state for an id to update
+  const [todoIdToUpdate, settodoIdToUpdate] = useState(null);
 
   const createTodo = () => {
     try {
@@ -102,11 +106,70 @@ function App() {
   // }
   // const sortedTodos = sortTodoByCreated_At(todo_db);
 
+  //////////////////////
+  // EDIT TODO FUNCTION
+  const handleEditMode = (id) => {
+    setIsEditMode(true);
+    settodoIdToUpdate(id); //id from the state
+    const todo_db = getLocalStorage(todo_ls_name);
+    const todo_to_update = todo_db.find((todo) => todo.id === id);
+
+    if (!todo_to_update) {
+      return;
+    }
+    setTodoInput(todo_to_update.title);
+
+    // todoInput.value = todo_to_update.title;
+
+    //To hide and update btn
+
+    // updateTodoBtn.classList.remove('hidden'); //show update on todo btn
+    // updateTodoBtn.setAttribute('todo_id_to_update', id);
+
+    //  const addTodoBtn = document.querySelector('#add_todo_btn');
+    // addTodoBtn.classList.add('hidden'); //hide & add todo btn
+  };
+
+  /////UPDATE TODO ///////////////
+  const updateTodo = (e) => {
+    e.preventDefault();
+    //To validate our input and make a good ux
+    if (!todoInput) {
+      return setFormError({
+        isError: true,
+        errorMesssage: 'Todo title cannot be empty',
+      });
+    }
+
+    // const todo_id_to_update = updateTodoBtn.getAttribute('todo_id_to_update');
+    const todo_db = JSON.parse(localStorage.getItem(todo_ls_name)) || [];
+    const updated_todo_db = todo_db.map((todo) => {
+      //map through our todo_db
+      if (todo.id === todoIdToUpdate) {
+        return { ...todo, title: todoInput };
+      } else {
+        return todo;
+      }
+    });
+
+    setLocalStorage(todo_ls_name, updated_todo_db); //UPDATE STORAGE
+    fetchTodos(); //FETCH TODO, SO THAT THE UI WILL UPDATE
+    setTodoInput(''); //to clear the form and have a good UX. users can retype their input
+    // updateTodoBtn.classList.add('hidden');
+    // const addTodoBtn = document.querySelector('#add_todo_btn');
+    // addTodoBtn.classList.remove('hidden'); //show & add todo btn
+    setIsEditMode(false);
+    // showConfirmModel({
+    //   title: 'Todo Updated',
+    //   icon: 'success',
+    //   confirmButtonText: 'Okay',
+    // });
+  };
+
   useEffect(() => {
     fetchTodos();
   }, []);
 
-  console.log(todos);
   return (
     <div>
       <header className='mt-10 p-4 max-w-lg mx-auto bg-green-500 text-white'>
@@ -125,23 +188,29 @@ function App() {
             value={todoInput}
             onChange={(e) => setTodoInput(e.target.value)}
           />
-          <button
-            onClick={createTodo}
-            className='bg-green-500 text-white py-2 px-4 rounded-md m-2'
-            id='add_todo_btn'
-          >
-            Add
-          </button>
-          <button
-            // onclick={updateTodo}
-            className='hidden bg-slate-500 text-white py-2 px-4 rounded-md m-2'
-            id='update_todo_btn'
-          >
-            Update
-          </button>
+
+          {isEditMode ? (
+            <button
+              className=' bg-slate-500 text-white py-2 px-4 rounded-md m-2'
+              onClick={updateTodo}
+              type='submit'
+            >
+              Update
+            </button>
+          ) : (
+            <button
+              onClick={createTodo}
+              type='submit'
+              className='bg-green-500 text-white py-2 px-4 rounded-md m-2'
+            >
+              Add
+            </button>
+          )}
         </form>
         {formError && formError.isError && (
-          <span className='text-left p-2'>{formError.errorMesssage}</span>
+          <span className='text-red-400 text-xs text-left p-2'>
+            {formError.errorMesssage}
+          </span>
         )}
         {!loadingTodos && todos.length === 0 && (
           <p className='text-center text-slate-500'>
@@ -167,6 +236,7 @@ function App() {
                     created_at={created_at}
                     key={`todo-list-${id}`}
                     handleDelete={handleDelete}
+                    handleEditMode={handleEditMode}
                   />
                 );
               })}
