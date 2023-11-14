@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { getLocalStorage, setLocalStorage } from './utils/local-storage';
 import { TodoLoader } from './components/TodoLoader';
 import { TodoList } from './components/TodoList';
+import { showConfirmModal, showModel } from './utils/showModal';
 
 import './App.css';
 
@@ -57,6 +58,31 @@ function App() {
     } catch (error) {
       //     showError(error.message);
     }
+  };
+
+  //////////////////////
+  //DELETE TODO FUNCTION
+  const handleDelete = (id) => {
+    const deleteTodo = () => {
+      //Get todo ls [Local Storage]
+      const todo_db = getLocalStorage(todo_ls_name);
+
+      //filter out todos that doesn't match the id
+      const new_todo_db = todo_db.filter((todo) => todo.id !== id);
+
+      //set the new todos without the todo that matches the id to the ls
+      setLocalStorage(todo_ls_name, new_todo_db); //calling the function from our local storage
+      fetchTodos();
+    };
+
+    showConfirmModal({
+      title: 'Delete Todo!',
+      text: 'Do you want to delete this todo?',
+      icon: 'warning',
+      confirmButtonText: 'Yes!',
+      showCancelButton: true,
+      cb: deleteTodo,
+    });
   };
 
   //////////////////////
@@ -132,6 +158,7 @@ function App() {
             </section>
           ) : (
             <>
+              {/* passing as a props */}
               {todos.map(({ title, id, created_at }) => {
                 return (
                   <TodoList
@@ -139,6 +166,7 @@ function App() {
                     id={id}
                     created_at={created_at}
                     key={`todo-list-${id}`}
+                    handleDelete={handleDelete}
                   />
                 );
               })}

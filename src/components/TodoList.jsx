@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const TodoList = (props) => {
-  const { id, title, created_at } = props;
+  const { id, title, created_at, handleDelete } = props;
   return (
     <div
       id='task'
@@ -26,7 +26,8 @@ export const TodoList = (props) => {
           </svg>
         </button>
         <button
-        // onclick="(deleteTodo('${todo.id}'))"
+          // onclick="(deleteTodo('${todo.id}'))"
+          onClick={() => handleDelete(id)}
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'

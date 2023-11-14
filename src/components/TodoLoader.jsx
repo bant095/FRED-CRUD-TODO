@@ -4,7 +4,7 @@ export const TodoLoader = () => {
   return (
     <div
       id='task'
-      className='group flex flex-row items-center justify-between border-b border-[1px] hover:bg-green-500 hover:text-white p-3 m-2'
+      className='group flex flex-row items-center justify-between bg-green-50 animate-pulse py-5 m-2'
     >
       <p className='hidden'>Buy Bread</p>
       <section className='hidden gap-3'>
