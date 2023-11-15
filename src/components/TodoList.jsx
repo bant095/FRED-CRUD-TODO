@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export const TodoList = (props) => {
   const { id, title, created_at, handleDelete, handleEditMode } = props;
@@ -7,7 +8,7 @@ export const TodoList = (props) => {
       id='task'
       className='group flex flex-row items-center justify-between border-b border-[1px] hover:bg-green-500 hover:text-white p-3 m-2'
     >
-      <a href={`/${id}`}>{title}</a>
+      <Link to={`/todo/${id}`}>{title}</Link>
       <div className='hidden group-hover:flex'>
         <button
           // onclick="handleEditMode('${todo.id}')"

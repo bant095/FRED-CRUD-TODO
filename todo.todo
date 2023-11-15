@@ -4,3 +4,8 @@
 
 DOM access - state //getting current value using state
 -document.querrySelector("form-message")
+
+
+TODO ROUTER
+// 1. Todo Dashboard
+// 2. View Todo Page (dynamic page - the route will be; /todo/:id)
